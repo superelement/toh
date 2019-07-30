@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 import { Observable, Subject } from 'rxjs';
 
 import {
-   debounceTime, distinctUntilChanged, switchMap
+   debounceTime, distinctUntilChanged, switchMap, filter, tap, map
  } from 'rxjs/operators';
 
 import { Hero } from '../hero';
@@ -15,6 +15,9 @@ import { HeroService } from '../hero.service';
   styleUrls: [ './hero-search.component.css' ]
 })
 export class HeroSearchComponent implements OnInit {
+  @Input() title: string;
+  @Input() isVillain: boolean;
+  
   heroes$: Observable<Hero[]>;
   private searchTerms = new Subject<string>();
 
@@ -35,6 +38,8 @@ export class HeroSearchComponent implements OnInit {
 
       // switch to new search observable each time the term changes
       switchMap((term: string) => this.heroService.searchHeroes(term)),
+
+      map(heroes => heroes.filter(o => o.isVillain === this.isVillain))
     );
   }
 }
