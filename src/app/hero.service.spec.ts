@@ -6,22 +6,27 @@ import { MockBackend } from '@angular/http/testing';
 import { HttpClientTestingModule, HttpTestingController, TestRequest } from '@angular/common/http/testing';
 import { Hero } from './hero';
 import { HttpClient } from '@angular/common/http';
+import { MessageService } from './message.service';
 
 describe('HeroService', () => {
   let httpClient: HttpClient;
   let httpTestingController: HttpTestingController;
+  let messageServiceSpy: jasmine.SpyObj<MessageService>;
   
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule], // tut says to use HttpModule, but it errors
       providers: [
-        HeroService
+        HeroService,
+        { provide: MessageService, useValue: jasmine.createSpyObj('MessageService', ['add']) }
       ]
     });
 
     // Inject the http service and test controller for each test
     httpClient = TestBed.get(HttpClient);
     httpTestingController = TestBed.get(HttpTestingController);
+    
+    messageServiceSpy = TestBed.get(MessageService);
   });
 
   it('should be created', inject([HeroService], (service: HeroService) => {
@@ -45,7 +50,7 @@ describe('HeroService', () => {
       if (typeof dataOrError === 'string') {
         req.error(new ErrorEvent(dataOrError));
       } else {
-        req.flush(dataOrError);
+        req.flush(dataOrError);``
       }
   
       // Finally, assert that there are no outstanding requests.
@@ -66,11 +71,11 @@ describe('HeroService', () => {
     }));
 
     it(`resolves to an empty array and handles the error`, inject([HeroService], (service: HeroService) => {
-      const handleErrorSpy = spyOn(service, 'handleError').and.callThrough();
+      
       const loadedData = getHeroes(service, 'some issue')
 
       expect(loadedData).toEqual([]);
-      expect(handleErrorSpy).toHaveBeenCalled();
+      expect(messageServiceSpy.add).toHaveBeenCalled();
     }));
   });
 
