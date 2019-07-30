@@ -6,7 +6,7 @@
       <input [(ngModel)]="hero.name" placeholder="name"/>
     </label>
   </div>
-  <div *ngIf="nemesis">
+  <div *ngIf="nemesisList">
     <label>nemesis:
       <select [(ngModel)]="nemesis.id" (ngModelChange)="onNemesisChange($event)">
         <option *ngFor="let item of nemesisList" [value]="item.id" >{{ item.name }}</option>

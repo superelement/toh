@@ -17,7 +17,7 @@ export class HeroDetailComponent implements OnInit {
   @Input() hero: Hero;
 
   nemesis: Hero;
-  nemesisList: Hero[] = [];
+  nemesisList: Hero[];
 
   constructor(
     private route: ActivatedRoute,
@@ -38,7 +38,7 @@ export class HeroDetailComponent implements OnInit {
           hero => hero.nemesisId || hero.nemesisId === 0 ? this.heroService.getHero(hero.nemesisId) : of(null),
           (hero, nemesis) => {
             this.hero = hero;
-            this.nemesis = nemesis;
+            this.nemesis = nemesis || {id: -1, name: '(not set)', isVillain: true};
           }
         )
       )
